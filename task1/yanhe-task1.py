@@ -1,7 +1,7 @@
 # __author__ = 'Yan'
+
 import re
 import glob
-import sys
 
 
 def name_reader():
@@ -35,7 +35,8 @@ def text_processor():
         f = open('yanhe-nyt-modified/' + text_file.split('/')[1], 'w')
         f.write(content)
         f.close()
-    print 'All listed name eliminated.'
+    print 'All listed name eliminated.\n'
+
 
 if __name__ == "__main__":
     text_processor()
