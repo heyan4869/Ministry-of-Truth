@@ -1,4 +1,4 @@
-# __author__ = 'Yan'
+# __author__ = 'yanhe'
 
 import glob
 import re
@@ -21,7 +21,8 @@ def message_reader():
     message_dict = {}
     mit_file = open('mit.txt', 'r')
     for line in mit_file:
-        text = re.findall(r'[a-z]', line.lower())
+        # text = re.findall(r'[a-z]', line.lower())
+        text = re.sub('[^\s\w]|\w*\d\w*', '', line).split()
         for word in text:
             freq = message_dict.get(word, 0) + 1
             message_dict[word] = freq
@@ -30,18 +31,19 @@ def message_reader():
 
 def char_mapping(text_dict, message_dict):
     mapping_dict = {}
-    print 'Start decoding the message.\n'
+    # Start decoding the message.
     word_value = text_dict.values()
     word_list = sorted(word_value)
     message_value = message_dict.values()
     message_list = sorted(message_value)
+    # Count the character frequency
     for i in xrange(26):
         for mword, mfreq in message_dict.items():
             if mfreq == message_list[i] and mword not in mapping_dict:
                 for tword, tfreq in text_dict.items():
                     if tfreq == word_list[i]:
                         mapping_dict[mword] = tword
-    # manual refine needed
+    # Manual refine the mapping relations
     mapping_dict['n'] = 's'
     mapping_dict['p'] = 'n'
     mapping_dict['r'] = 'm'
@@ -57,7 +59,8 @@ def char_mapping(text_dict, message_dict):
     mapping_dict['q'] = 'x'
     mapping_dict['u'] = 'q'
     mapping_dict['g'] = 'z'
-    # add uppercase char into mapping
+
+    # Add uppercase characters into mapping
     for mword, tword in mapping_dict.items():
         mapping_dict[chr(ord(mword) - 32)] = chr(ord(tword) - 32)
     return mapping_dict
@@ -69,6 +72,7 @@ def decoder():
     mapping = char_mapping(text_dict, message_dict)
     mit_file = open('mit.txt', 'r')
     f = open('yanhe-mit-modified.txt', 'w')
+    # Decode the text content with extracted mapping relations
     for line in mit_file:
         for i in xrange(len(line)):
             if line[i] in mapping:
@@ -78,4 +82,4 @@ def decoder():
 
 
 if __name__ == "__main__":
-    decoder()
+    message_reader()
